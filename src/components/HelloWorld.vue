@@ -1,14 +1,14 @@
 <template>
   <div>
     <h1 :class="style.name">{{p}}</h1>
-    <p>{{n}}</p>
+    <p>{{n}}=={{state.count}}</p>
     <p>{{msg}}=={{text}}</p>
-    <button @click="FunConstructor">你好世界</button>
+    <button @click="FunConstructor">+1</button>
   </div>
 </template>
 
 <script lang="ts">
-import {ref} from 'vue'
+import {ref,reactive,watchEffect,onMounted} from 'vue'
 import style from '/@assets/css/style.modules.css'
 export default {
   props:{
@@ -20,19 +20,28 @@ export default {
       st = '你好',
       num = 0
     }
-
-    const p: String = test.st
-    let n = ref(test.num)
+    const p: String=test.st
+    let state = reactive({
+      count:0
+    })
+    let n = ref(0)
     function FunConstructor() :void{
-      
-      console.log(n)
+      state.count++
+      n.value++
     }
+    watchEffect(()=>{
+
+    })
+    onMounted(()=>{
+      console.log('onMounted')
+    })
     return{
-      p,
+      state,
       style,
       n,
       FunConstructor,
-      text
+      text,
+      p
     }
   }
 }

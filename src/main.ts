@@ -4,4 +4,6 @@ import './index.css'
 import 'ant-design-vue/dist/antd.css'
 import Antd from 'ant-design-vue'
 
-createApp(App).use(Antd).mount('#app')
+const app = createApp(App)
+app.use(Antd).mount('#app')
+// app.config.globalProperties.$message = message;

@@ -2363,6 +2363,11 @@ vite@^1.0.0-rc.13:
     vue "^3.0.3"
     ws "^7.3.1"
 
+vue-router@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.npm.taobao.org/vue-router/download/vue-router-4.0.2.tgz?cache=0&sync_timestamp=1609110462070&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue-router%2Fdownload%2Fvue-router-4.0.2.tgz#5702bf8fa14535b80142fde226bf41a84917b1f4"
+  integrity sha1-VwK/j6FFNbgBQv3iJr9BqEkXsfQ=
+
 vue-types@^3.0.0:
   version "3.0.1"
   resolved "https://registry.npm.taobao.org/vue-types/download/vue-types-3.0.1.tgz#20e9baae8673de8093d0a989234695d08d544be0"

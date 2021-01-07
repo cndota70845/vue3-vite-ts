@@ -9,9 +9,9 @@
 
 <script lang="ts">
 import {ref,reactive,watchEffect,onMounted} from 'vue'
-import style from '/@assets/css/style.modules.css'
-import menu from '/@/method/menu.ts'
-import menuArr from '/@assets/data/menu.json'
+import style from '../assets/css/style.modules.css'
+import menu from '../method/menu'
+import menuArr from '../assets/data/menu.json'
 
 export default {
   props:{
@@ -26,8 +26,7 @@ export default {
       children ?:IMEMU[];
     }
 
-    let arr: IMEMU[]
-    arr = menuArr
+    let arr: IMEMU[]= menuArr
     const text: string = props.msg
     enum test{
       st = '你好',

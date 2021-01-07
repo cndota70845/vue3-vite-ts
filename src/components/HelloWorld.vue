@@ -3,18 +3,31 @@
     <h1 :class="style.name">{{p}}</h1>
     <p>{{n}}=={{state.count}}</p>
     <p>{{msg}}=={{text}}</p>
-    <button @click="FunConstructor">+1</button>
+    <a-button @click="FunConstructor">+1</a-button>
   </div>
 </template>
 
 <script lang="ts">
 import {ref,reactive,watchEffect,onMounted} from 'vue'
 import style from '/@assets/css/style.modules.css'
+import menu from '/@/method/menu.ts'
+import menuArr from '/@assets/data/menu.json'
+
 export default {
   props:{
     msg: String
   },
   setup(props,context){
+    interface IMEMU {
+      id :number;
+      name :string;
+      content :string;
+      icon :string;
+      children ?:IMEMU[];
+    }
+
+    let arr: IMEMU[]
+    arr = menuArr
     const text: string = props.msg
     enum test{
       st = '你好',
@@ -33,8 +46,7 @@ export default {
 
     })
     onMounted(()=>{
-      console.log('onMounted')
-      FunConstructor()
+      console.log(menu.identity(arr))
     })
     return{
       state,

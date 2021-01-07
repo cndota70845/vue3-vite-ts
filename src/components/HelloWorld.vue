@@ -16,7 +16,7 @@ export default {
   },
   setup(props,context){
     const text: string = props.msg
-    const enum test{
+    enum test{
       st = '你好',
       num = 0
     }
@@ -34,6 +34,7 @@ export default {
     })
     onMounted(()=>{
       console.log('onMounted')
+      FunConstructor()
     })
     return{
       state,

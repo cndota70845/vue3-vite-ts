@@ -4,7 +4,7 @@ module.exports = {
     proxy: {
         // 如果是 /api 打头，则访问地址如下
         '/api': {
-          target: 'http://219.242.113.135:8080/',
+          target: 'http://219.242.113.135:3080/',
           changeOrigin: true,
           // rewrite: path => path.replace(/^\/api/, '')
         }

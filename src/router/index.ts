@@ -1,8 +1,28 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter,createWebHistory} from 'vue-router'
 
-export default createRouter({
+const router = createRouter({
   // 指定路由模式
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   // 路由地址
-  routes: []
+  routes: [
+    {
+      path: '/',
+      name: 'Home',
+      component: () => import('../views/Home.vue'),
+      children:[
+        {
+          path: '/TS',
+          name: 'ts',
+          component: () => import('../views/practice/TS.vue')
+        },
+        {
+          path: '/Vue3',
+          name: 'Vue3',
+          component: () => import('../views/practice/Vue3.vue')
+        }
+      ]
+    }
+  ]
 })
+
+export default router

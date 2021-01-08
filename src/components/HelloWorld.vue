@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 :class="style.name">{{p}}</h1>
+    <h1>{{p}}</h1>
     <p>{{n}}=={{state.count}}</p>
     <p>{{msg}}=={{text}}</p>
     <a-button @click="FunConstructor">+1</a-button>
@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import {ref,reactive,watchEffect,onMounted} from 'vue'
-import style from '../assets/css/style.modules.css' 
+// import style from '../assets/css/style.modules.css' 
 import menu from '../method/menu'
 import menuData from '../assets/data/menu'
 
@@ -49,7 +49,7 @@ export default {
     })
     return{
       state,
-      style,
+      // style,
       n,
       FunConstructor,
       text,

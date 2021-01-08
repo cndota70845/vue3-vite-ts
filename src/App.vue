@@ -1,19 +1,19 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="/@assets/logo.png" />
-    <HelloWorld :msg="msg" />
+    <!-- <img alt="Vue logo" src="/@assets/logo.png" />
+    <HelloWorld :msg="msg" /> -->
+    <router-view></router-view>
   </div>
-  
 </template>
 
 <script lang="ts">
-import HelloWorld from '/@components/HelloWorld.vue'
+// import HelloWorld from '/@components/HelloWorld.vue'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  },
+  // components: {
+  //   HelloWorld
+  // },
   setup(){
     const msg: string='Hello Vue 3.0 + Vite'
     return {msg}

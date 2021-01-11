@@ -1,10 +1,10 @@
 <template>
     <div class="TS">
         <a-row class="row">
-            <a-input :value="name" @change="name=$event.target.value" addonBefore="请输入姓名" allow-clear draggable=""/>
+            <a-input :value="name" @change="name=$event.target.value" addonBefore="请输入姓名" allow-clear draggable="" @pressEnter="addperson" />
         </a-row>
         <a-row class="row">
-            <a-input :value="nation" @change="nation=$event.target.value" addonBefore="请输入国籍" allow-clear />
+            <a-input :value="nation" @change="nation=$event.target.value" addonBefore="请输入国籍" allow-clear @pressEnter="addperson" />
         </a-row>
         <a-row class="row">
             <a-button @click="addperson" type="primary">添加人员</a-button>
@@ -65,6 +65,9 @@ export default {
             if(name.value==='' || nation.value==='' || name.value===undefined || nation.value===undefined){
                 console.error('有参数没有输入')
             }
+            else if(state.person.filter(item=>item.name===name.value).length>0){
+                console.error('此人已经存在')
+            }   
             else{
                 const p = new game.person(name.value,nation.value);
                 p.say();

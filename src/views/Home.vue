@@ -7,6 +7,7 @@
                         theme="dark"
                         mode="horizontal"
                         @click="routerChange"
+                        style="line-height:64px;"
                     >
                         <a-menu-item key="Vue3">Vue3</a-menu-item>
                         <a-menu-item key="TS">TS</a-menu-item>
@@ -59,10 +60,11 @@ export default {
 <style scope>
 #components-layout-demo-top .logo {
     width: 100%;
-    height: 31px;
+    height: 64px;
     background: rgba(255, 255, 255, 0.2);
-    margin: 16px 24px 16px 0;
+    margin:0 auto;
     float: left;
+    line-height: 64px;
 }
 .Home{
     height: 100%;

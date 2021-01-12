@@ -25,19 +25,12 @@
 </template>
 
 <script lang="ts">
-import {Input,Button,Row,Col,Table} from 'ant-design-vue'
-import { ref,onMounted,watch,reactive } from 'vue'
+import { ref,onMounted,watch,reactive,getCurrentInstance} from 'vue'
 import game from '../../method/game'
 export default {
     name:"TS",
-    components:{
-        'a-input':Input,
-        'a-button':Button,
-        'a-col':Col,
-        'a-row':Row,
-        'a-table':Table
-    },
     setup(props,context){
+        const { ctx } :any = getCurrentInstance();
         let name=ref()
         let nation=ref()
         let state = reactive({
@@ -60,19 +53,21 @@ export default {
                 slots: { customRender: 'action' },
             }
         ]
+        enum content{
+            none='有参数没有输入',
+            exist='此人已经存在'
+        }
         function addperson() :void{
-            console.log(name.value,nation.value)
             if(name.value==='' || nation.value==='' || name.value===undefined || nation.value===undefined){
-                console.error('有参数没有输入')
+                ctx.$message.error(content.none,1)  
             }
             else if(state.person.filter(item=>item.name===name.value).length>0){
-                console.error('此人已经存在')
+                ctx.$message.error(content.exist,1)
             }   
             else{
                 const p = new game.person(name.value,nation.value);
                 p.say();
                 state.person.push(p);
-                console.log(state.person)
             }
         }
         interface table{
@@ -82,9 +77,6 @@ export default {
         function del(val :table,ind: number){
             state.person.splice(ind,1)
         }
-        onMounted(() => {
-            console.log(name.value,nation.value)
-        })
         watch(state.person, () => {
             console.log(state.person, '改变')
         })

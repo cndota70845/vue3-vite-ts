@@ -8,9 +8,9 @@
                         mode="horizontal"
                         @click="routerChange"
                         style="line-height:64px;"
+                        :selectedKeys="[routerPath.path]"
                     >
-                        <a-menu-item key="Vue3">Vue3</a-menu-item>
-                        <a-menu-item key="TS">TS</a-menu-item>
+                        <a-menu-item :key="item.key" v-for="item in arr">{{item.content}}</a-menu-item>
                     </a-menu>
                 </div>
             </a-layout-header>
@@ -27,20 +27,22 @@
 </template>
 
 <script lang="ts">
-import { getCurrentInstance} from 'vue'
-import { Menu,Layout } from 'ant-design-vue'
+import { getCurrentInstance,onMounted,reactive} from 'vue'
+import menuData from '../assets/data/menu'
+import menuFuc from '../method/menu'
 export default {
     name:"Home",
-    components:{
-        'a-menu':Menu,
-        'a-menu-item':Menu.Item,
-        'a-layout':Layout,
-        'a-layout-header':Layout.Header,
-        'a-layout-content':Layout.Content,
-        'a-layout-footer':Layout.Footer
-    },
     setup(props,context){
-        const { ctx } :any= getCurrentInstance(); 
+        interface IMEMU {
+            id :number;
+            key :string;
+            content :string;
+            icon ?:string;
+            children ?:IMEMU[];
+        }
+        const arr = menuFuc.identity<IMEMU[]>(menuData.menuArr)
+        const { ctx } :any = getCurrentInstance();
+        const routerPath = reactive({ path: ctx.$router.currentRoute.value.path.replace('/','') })
         interface pathData {
             item: any
             key: string
@@ -48,10 +50,13 @@ export default {
         }
         function routerChange(item) :void{
             const path :string='/'+item.key
-            ctx.$router.push(path)   
+            routerPath.path = item.key   
+            ctx.$router.push(path)
         }
         return {
-            routerChange
+            routerChange,
+            routerPath,
+            arr
         }
     }
 }

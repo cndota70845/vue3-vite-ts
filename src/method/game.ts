@@ -1,9 +1,9 @@
-abstract class person{
+class person{
     constructor(public name:string, public nation:string){}//构造函数
     public say(){
         console.log('我的姓名是'+this.name+'，我的国籍是'+this.nation)
     }
-    abstract skill(): any
+    // abstract skill(): any
 }
 class fammer extends person{
     constructor(public name:string, public nation:string,private _age:number){

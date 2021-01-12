@@ -8,13 +8,16 @@
       "esnext"
     ],
     "allowJs": true,
+    "sourceMap": false,//true开启跟踪
+    "noImplicitAny": true,//false参数注解为any是不用标明
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "strict": true,//严格模式
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",//node环境
     "resolveJsonModule": true,
+    "removeComments": true,//编译时去除注释
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",

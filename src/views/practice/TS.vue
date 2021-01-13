@@ -65,7 +65,7 @@ export default {
                 ctx.$message.error(content.exist,1)
             }   
             else{
-                const p = new game.person(name.value,nation.value);
+                const p = new game.human.person(name.value,nation.value);
                 p.say();
                 state.person.push(p);
             }

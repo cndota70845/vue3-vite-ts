@@ -9,12 +9,13 @@
                         @click="routerChange"
                         style="line-height:64px;"
                         :selectedKeys="[routerPath.path]"
+                        :pagination="{pageSize:15}"
                     >
                         <a-menu-item :key="item.key" v-for="item in arr">{{item.content}}</a-menu-item>
                     </a-menu>
                 </div>
             </a-layout-header>
-            <a-layout-content style="padding: 0 50px">
+            <a-layout-content style="padding: 0 50px" id="components-layout-demo-content">
                 <div :style="{ background: '#fff', padding: '24px', minHeight: '100%' }">
                     <router-view></router-view>
                 </div>

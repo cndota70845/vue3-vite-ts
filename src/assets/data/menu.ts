@@ -10,6 +10,12 @@ const menuArr=[
         key:'TS',
         content:'TS',
         icon:'ios-people',
+    },
+    {
+        id:3,
+        key:'Axios',
+        content:'Axios',
+        icon:'ios-people',
     }
 ]
 export default{

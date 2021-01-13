@@ -19,6 +19,11 @@ const router = createRouter({
           path: '/Vue3',
           name: 'Vue3',
           component: () => import('../views/practice/Vue3.vue')
+        },
+        {
+          path: '/Axios',
+          name: 'Axios',
+          component: () => import('../views/practice/Axios.vue')
         }
       ]
     }

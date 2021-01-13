@@ -4,17 +4,19 @@
  */
 import axios from 'axios'
 import {message} from 'ant-design-vue'
+import cookies from 'cookies-js'
 enum situation{
     node='当前环境变量：',
     baseURL='当前环境路径：',
     development='development',
     production='production'
 }
+const baseURL:string = import.meta.env.VITE_APP_DOMAIN
 if (process.env.NODE_ENV === situation.development) {
     console.log(situation.node+process.env.NODE_ENV)
-    console.log(situation.baseURL+process.env.VUE_APP_BASE_URL)
+    console.log(situation.baseURL+baseURL)
 }
-axios.defaults.baseURL = process.env.VUE_APP_BASE_URL
+axios.defaults.baseURL = baseURL
 const errorHandle = (status:any, other:any) => {
     // 状态码判断
     switch (status) {
@@ -44,7 +46,12 @@ instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlenco
  * 每次请求前，如果存在token则在请求头中携带token 
  */ 
 instance.interceptors.request.use(    
-    config => {return config},    
+    config => {
+        if(cookies.get('token')){
+            config.headers.token = cookies.get('token')
+        }
+        return config
+    },    
     error =>  message.error(error))
 
 // 响应拦截器
@@ -53,8 +60,8 @@ instance.interceptors.response.use(
     res => {
         if(res.status === 200){
             console.log(res);
-            if(!res.headers.token){
-                // logout()
+            if(res.headers.token){
+                cookies.set('token',res.headers.token)
             }
             switch(res.data.code){
                 case 3:{

@@ -1,16 +1,14 @@
 const {resolve} = require('path')
 module.exports = {
-    base: './',
+    base: '/',
     port: 3000,
-    hostname:'localhost',
     outDir: 'dist',
     https: false,
     // proxy: {
-    //   '/': {
-    //       target: 'http://219.242.113.135:3000/',
-    //       changeOrigin: true,
-    //       ws: true,
-    //       rewrite: path => path.replace(/^\//, '')
+    //   '/api': {
+    //     target: 'http://jsonplaceholder.typicode.com',
+    //     changeOrigin: true,
+    //     rewrite: path => path.replace(/^\/api/, '')
     //   }
     // },
     alias: {

@@ -28,7 +28,6 @@ export default {
         const { ctx } :any = getCurrentInstance();
         const columns=[
             {title: '任务名称',key: 'approve_name',dataIndex:'approve_name'},
-            {title: '任务类型',slot: 'type',dataIndex:'type'},
             {title: '申报人',key: 'name',dataIndex:'name'},
             {title: '任务类别',key: 'task_category',dataIndex:'task_category'},
             {title: '出发日期',key: 'departure_date',dataIndex:'departure_date'},
@@ -90,5 +89,8 @@ export default {
 .row{
     text-align: center;
     margin-top:10px;
+}
+.table{
+    width: 100%;
 }
 </style>

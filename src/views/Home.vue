@@ -31,6 +31,7 @@
 import { getCurrentInstance,onMounted,reactive} from 'vue'
 import menuData from '../assets/data/menu'
 import menuFuc from '../method/menu'
+import copy from '../method/deepCopy'
 export default {
     name:"Home",
     setup(props,context){
@@ -41,7 +42,10 @@ export default {
             icon ?:string;
             children ?:IMEMU[];
         }
-        const arr = menuFuc.identity<IMEMU[]>(menuData.menuArr)
+        let arr = menuFuc.identity<IMEMU[]>(menuData.menuArr)
+        let newArr = copy.deepcopy(arr)
+        arr.push({id :4,key:'test',content:'test'})
+        newArr.splice(1,1)
         const { ctx } :any = getCurrentInstance();
         const routerPath = reactive({ path: ctx.$router.currentRoute.value.path.replace('/','') })
         interface pathData {
@@ -57,7 +61,8 @@ export default {
         return {
             routerChange,
             routerPath,
-            arr
+            arr,
+            newArr
         }
     }
 }

@@ -42,10 +42,8 @@ export default {
             icon ?:string;
             children ?:IMEMU[];
         }
-        let arr = menuFuc.identity<IMEMU[]>(menuData.menuArr)
-        let newArr = copy.deepcopy(arr)
-        arr.push({id :4,key:'test',content:'test'})
-        newArr.splice(1,1)
+        const arr = menuFuc.identity<IMEMU[]>(menuData.menuArr)
+        const newArr = copy.deepcopy(arr)
         const { ctx } :any = getCurrentInstance();
         const routerPath = reactive({ path: ctx.$router.currentRoute.value.path.replace('/','') })
         interface pathData {

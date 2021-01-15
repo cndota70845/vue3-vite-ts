@@ -2,30 +2,37 @@ enum type{
     string='string',
     number='number',
     object='object',
+    boolean='boolean',
     Object='[object Object]',
     Array='[object Array]'
 }
 
-function deepcopy(origin:any){
-    console.log(typeof(origin),Object.prototype.toString.call(origin))
-    let target:any
-    if(typeof(origin)===type.string || typeof(origin)===type.number){
-        target = origin
+//null undefined Date RegExp string number object boolean
+function deepcopy(origin:any,hashMap=new WeakMap){
+    if(origin instanceof Date){
+        return new Date(origin)
+    }
+    else if(origin instanceof RegExp){
+        return new RegExp(origin)
+    }
+    else if(typeof(origin)===type.string || typeof(origin)===type.number || origin==undefined || typeof(origin)===type.boolean){
+        return origin
     }
     else if(typeof(origin)===type.object){
-        if(Object.prototype.toString.call(origin)===type.Object){
-            target = {}
-            for(let key in origin){
-                target[key] = deepcopy(origin[key])
-            };
+        const hashKey = hashMap.get(origin)
+        if(hashKey){
+            return hashKey
         }
-        else if(Object.prototype.toString.call(origin)===type.Array){
-            target=[]
-            origin.forEach((element:any,index:number) => {
-                target[index] = deepcopy(element)
-            });
+        else{
+            const target = new origin.constructor()
+            for(let key in origin){
+                if(origin.hasOwnProperty(key)){
+                    target[key] = deepcopy(origin[key])
+                }
+            };
+            return target
         }
     }
-    return target
 }
+
 export default {deepcopy}

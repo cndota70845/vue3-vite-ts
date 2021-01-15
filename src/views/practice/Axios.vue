@@ -14,6 +14,7 @@
                 :columns="columns" 
                 :data-source="data" 
                 :rowKey="(record,index)=>{return index}"
+                :style="{width:'100%'}"
                 bordered>
             </a-table>
         </a-row>

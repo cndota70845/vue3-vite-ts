@@ -1,10 +1,5 @@
 enum type{
-    string='string',
-    number='number',
-    object='object',
-    boolean='boolean',
-    Object='[object Object]',
-    Array='[object Array]'
+    object='object'
 }
 
 //null undefined Date RegExp string number object boolean
@@ -14,9 +9,6 @@ function deepcopy(origin:any,hashMap=new WeakMap){
     }
     else if(origin instanceof RegExp){
         return new RegExp(origin)
-    }
-    else if(typeof(origin)===type.string || typeof(origin)===type.number || origin==undefined || typeof(origin)===type.boolean){
-        return origin
     }
     else if(typeof(origin)===type.object){
         const hashKey = hashMap.get(origin)
@@ -32,6 +24,9 @@ function deepcopy(origin:any,hashMap=new WeakMap){
             };
             return target
         }
+    }
+    else{
+        return origin
     }
 }
 

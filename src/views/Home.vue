@@ -11,7 +11,7 @@
                         :selectedKeys="[routerPath.path]"
                         :pagination="{pageSize:15}"
                     >
-                        <a-menu-item :key="item.key" v-for="item in arr">{{item.content}}</a-menu-item>
+                        <a-menu-item :key="item.key" v-for="item in newArr">{{item.content}}</a-menu-item>
                     </a-menu>
                 </div>
             </a-layout-header>
@@ -59,7 +59,6 @@ export default {
         return {
             routerChange,
             routerPath,
-            arr,
             newArr
         }
     }

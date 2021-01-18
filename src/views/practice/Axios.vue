@@ -73,7 +73,6 @@ export default {
         return{
             login,
             formLogin,
-            research_option,
             data,
             columns
         }

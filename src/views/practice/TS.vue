@@ -15,6 +15,24 @@
         <a-row class="row">
             <a-input addonBefore="vue3防抖测试" @change="text=$event.target.value" allow-clear :defaultValue="text"/>
         </a-row>
+        <div id="skill">
+            <a-row class="row">
+                <a-button>Q</a-button>
+                <span class="exp">技能CD:2S</span>
+            </a-row>
+            <a-row class="row">
+                <a-button>W</a-button>
+                <span class="exp">技能CD:5S</span>
+            </a-row>
+            <a-row class="row">
+                <a-button>E</a-button>
+                <span class="exp">技能CD:10S</span>
+            </a-row>
+            <a-row class="row">
+                <a-button>R</a-button>
+                <span class="exp">技能CD:20S</span>
+            </a-row>
+        </div>
         <a-row>{{text}}</a-row>
         <a-row>{{text2}}</a-row>
         <a-row class="row">
@@ -65,6 +83,12 @@ export default {
             none='有参数没有输入',
             exist='此人已经存在'
         }
+        enum skillKey{
+            Q = 'Q',
+            W = 'W',
+            E = 'E',
+            R = 'R'
+        }
         function addperson() :void{
             if(name.value==='' || nation.value==='' || name.value===undefined || nation.value===undefined){
                 ctx.$message.error(content.none,1)  
@@ -111,8 +135,8 @@ export default {
         text = useDebounce(Default)
         const text2 = ref('')
         //防抖debounce代码：
+        let timeout = null; // 创建一个标记用来存放定时器的返回值
         function debounce(fn:any,delay:number) {
-            let timeout = null; // 创建一个标记用来存放定时器的返回值
             clearTimeout(timeout); 
             // 然后又创建一个新的 setTimeout, 这样就能保证interval 间隔内如果时间持续触发，就不会执行 fn 函数
             timeout = setTimeout(() => {
@@ -122,12 +146,70 @@ export default {
         // 处理函数
         function handle() {
             console.log('防抖：', Math.random());
+            timeout = null;
         }
         watch(()=>{
             return text2.value
         }, (newVal,oldVal) => {
             debounce(handle,1000)
         })
+        let canRun=reactive({
+            Q:true,
+            W:true,
+            E:true,
+            R:true
+        }) 
+        onMounted(()=>{
+            document.getElementById("skill").addEventListener("click",function(event){
+                switch((event.target as any).innerText){
+                    case skillKey.Q:
+                        throttle(handle,2000,canRun.Q,skillKey.Q);
+                        break;
+                    case skillKey.W:
+                        throttle(handle,5000,canRun.W,skillKey.W);
+                        break;
+                    case skillKey.E:
+                        throttle(handle,10000,canRun.E,skillKey.E);
+                        break;
+                    case skillKey.R:
+                        throttle(handle,20000,canRun.R,skillKey.R);
+                        break;
+                }
+            });
+            document.onkeydown=function(event){
+                var e = event || window.event || arguments.callee.caller.arguments[0];
+                if(e && e.keyCode==81){ // 按 Q
+                    throttle(handle,2000,canRun.Q,skillKey.Q);
+                }
+                if(e && e.keyCode==87){ // 按 W
+                    throttle(handle,5000,canRun.W,skillKey.W);
+                }
+                if(e && e.keyCode==69){ // enter E
+                    throttle(handle,10000,canRun.E,skillKey.E);
+                }
+                if(e && e.keyCode==82){ // enter R
+                    throttle(handle,20000,canRun.R,skillKey.R);
+                }
+            };
+        })
+        //节流throttle代码：
+        function throttle(fn:any,delay:number,BL:boolean,type:string){
+            // 在函数开头判断标记是否为true，不为true则return
+            for(let key in canRun){
+                if(type===key){
+                    if (BL===true){
+                        // 立即设置为false
+                        fn.apply(this, arguments);
+                        canRun[key] = false;
+                        setTimeout(() => { 
+                            // 最后在setTimeout执行完毕后再把标记设置为true(关键)表示可以执行下一次循环了。
+                            // 当定时器没有执行的时候标记永远是false，在开头被return掉
+                            canRun[key] = true;
+                        }, delay);
+                    }
+                }
+            }
+        }
         return{
             name,
             nation,
@@ -136,7 +218,8 @@ export default {
             columns,
             del,
             text,
-            text2
+            text2,
+            canRun
         } 
     }
 }
@@ -150,5 +233,9 @@ export default {
 .row{
     text-align: center;
     margin-top:10px;
+}
+.exp{
+    line-height: 32px;
+    padding-left: 10px;
 }
 </style>

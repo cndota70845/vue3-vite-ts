@@ -10,6 +10,10 @@
             <a-button @click="addperson" type="primary">添加人员</a-button>
         </a-row>
         <a-row class="row">
+            <a-input addonBefore="防抖测试" @change="text=$event.target.value" allow-clear :defaultValue="text"/>
+        </a-row>
+        <a-row>{{text}}</a-row>
+        <a-row class="row">
             <a-table 
                 :columns="columns" 
                 :data-source="state.person"
@@ -25,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { ref,onMounted,watch,reactive,getCurrentInstance} from 'vue'
+import { ref,onMounted,watch,reactive,getCurrentInstance, customRef, watchEffect} from 'vue'
 import game from '../../method/game'
 export default {
     name:"TS",
@@ -77,16 +81,41 @@ export default {
         function del(val :table,ind: number){
             state.person.splice(ind,1)
         }
+        function useDebounce(val:string,delay = 500){
+            let timeout;
+            return customRef((track,trigger)=>{
+                return{
+                    get() {
+                        track()
+                        return val
+                    },
+                    set(newValue:string) {
+                        clearTimeout(timeout)
+                        timeout = setTimeout(() => {
+                            val = newValue
+                            trigger()
+                        }, delay)
+                    }
+                }
+            })
+        }
         watch(state.person, () => {
             console.log(state.person, '改变')
         })
+        watchEffect(()=>{
+            console.log(state.person)
+        })
+        let text:object
+        const Default:string= '初始值'
+        text = useDebounce(Default)
         return{
             name,
             nation,
             addperson,
             state,
             columns,
-            del
+            del,
+            text
         } 
     }
 }

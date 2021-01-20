@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import {ref,onMounted,getCurrentInstance,reactive,watch} from 'vue'
+import {ref,getCurrentInstance,reactive,watch} from 'vue'
 export default {
     name:"Vue3",
     setup(){
@@ -61,7 +61,7 @@ export default {
         const data = reactive({
             lastNumber:undefined,
             result:{
-                value:'0',
+                value:String(uselly.default),
                 status:true
             },
             curAction:undefined,
@@ -88,19 +88,19 @@ export default {
         }
         function operatorFunc(params:string) {
             if(data.curAction===undefined){
-                data.curAction = params
-                data.lastNumber = data.result.value
-                data.result.value = '0'
+                data.curAction = params;
+                data.lastNumber = data.result.value;
+                data.result.value = String(uselly.default);
             }
             else{
-                evalFunc()
-                operatorFunc(params)
+                evalFunc();
+                operatorFunc(params);
             }
         }
         function evalFunc() {
             if(data.curAction!==undefined && data.lastNumber!==undefined){
-                const Number:number = data.lastNumber.includes(uselly.float)?parseFloat(data.lastNumber):parseInt(data.lastNumber)
-                const Number2:number = data.result.value.includes(uselly.float)?parseFloat(data.result.value):parseInt(data.result.value)
+                const Number:number = data.lastNumber.includes(uselly.float)?parseFloat(data.lastNumber):parseInt(data.lastNumber);
+                const Number2:number = data.result.value.includes(uselly.float)?parseFloat(data.result.value):parseInt(data.result.value);
                 let res:string
                 switch(data.curAction){
                     case operator.plus:
@@ -136,19 +136,19 @@ export default {
         }
         function pointFuc(params:string) {
             if(data.result.status === false){
-                data.result.value = '0' + params;
+                data.result.value = String(uselly.default) + params;
                 data.result.status = true;
             }
             else if(data.result.value.includes(uselly.float)){
                 ctx.$message.error(uselly.error,1);
             }
             else{
-                data.result.value = data.result.value + params
+                data.result.value = data.result.value + params;
             }
         }
         function clearFuc(params:string) {
             data.lastNumber = undefined;
-            data.result.value = '0';
+            data.result.value = String(uselly.default);
             data.curAction = undefined;
         }
         return{
@@ -216,6 +216,7 @@ export default {
   line-height: 36px;
   text-align: center;
   transition: all 0.2s ease;
+  user-select:none;
 }
 .keys span.operator {
   background-color: #fff0f5;

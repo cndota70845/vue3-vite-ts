@@ -8,7 +8,7 @@
                         mode="horizontal"
                         @click="routerChange"
                         style="line-height:64px;"
-                        :selectedKeys="[routerPath.path]"
+                        :selectedKeys="[pathRef]"
                         :pagination="{pageSize:15}"
                     >
                         <a-menu-item :key="item.key" v-for="item in newArr">{{item.content}}</a-menu-item>
@@ -28,13 +28,14 @@
 </template>
 
 <script lang="ts">
-import { getCurrentInstance,onMounted,reactive} from 'vue'
+import { getCurrentInstance,onMounted,reactive,toRef} from 'vue'
 import menuData from '../assets/data/menu'
 import menuFuc from '../method/menu'
 import copy from '../method/deepCopy'
 export default {
     name:"Home",
     setup(props,context){
+        const { ctx } :any = getCurrentInstance();
         interface IMEMU {
             id :number;
             key :string;
@@ -42,23 +43,23 @@ export default {
             icon ?:string;
             children ?:IMEMU[];
         }
-        const arr = menuFuc.identity<IMEMU[]>(menuData.menuArr)
-        const newArr = copy.deepcopy(arr)
-        const { ctx } :any = getCurrentInstance();
-        const routerPath = reactive({ path: ctx.$router.currentRoute.value.path.replace('/','') })
+        const arr = menuFuc.identity<IMEMU[]>(menuData.menuArr);
+        const newArr = copy.deepcopy(arr);
+        const routerPath = reactive({ path: ctx.$router.currentRoute.value.path.replace('/','') });
+        const pathRef = toRef(routerPath,'path');
         interface pathData {
-            item: any
-            key: string
-            keyPath: string[]
+            item: any;
+            key: string;
+            keyPath: string[];
         }
         function routerChange(item) :void{
-            const path :string='/'+item.key
-            routerPath.path = item.key   
-            ctx.$router.push(path)
+            const path :string = '/' + item.key;
+            pathRef.value = item.key; 
+            ctx.$router.push(path);
         }
         return {
             routerChange,
-            routerPath,
+            pathRef,
             newArr
         }
     }

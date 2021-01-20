@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import {ref,getCurrentInstance,reactive,watch} from 'vue'
+import {ref,getCurrentInstance,reactive} from 'vue'
 export default {
     name:"Vue3",
     setup(){

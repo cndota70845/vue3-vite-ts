@@ -10,9 +10,13 @@
             <a-button @click="addperson" type="primary">添加人员</a-button>
         </a-row>
         <a-row class="row">
-            <a-input addonBefore="防抖测试" @change="text=$event.target.value" allow-clear :defaultValue="text"/>
+            <a-input addonBefore="JS防抖测试" @change="text2=$event.target.value" allow-clear :defaultValue="text2"/>
+        </a-row>
+        <a-row class="row">
+            <a-input addonBefore="vue3防抖测试" @change="text=$event.target.value" allow-clear :defaultValue="text"/>
         </a-row>
         <a-row>{{text}}</a-row>
+        <a-row>{{text2}}</a-row>
         <a-row class="row">
             <a-table 
                 :columns="columns" 
@@ -99,15 +103,31 @@ export default {
                 }
             })
         }
-        watch(state.person, () => {
-            console.log(state.person, '改变')
-        })
         watchEffect(()=>{
             console.log(state.person)
         })
         let text:object
         const Default:string= '初始值'
         text = useDebounce(Default)
+        const text2 = ref('')
+        //防抖debounce代码：
+        function debounce(fn:any,delay:number) {
+            let timeout = null; // 创建一个标记用来存放定时器的返回值
+            clearTimeout(timeout); 
+            // 然后又创建一个新的 setTimeout, 这样就能保证interval 间隔内如果时间持续触发，就不会执行 fn 函数
+            timeout = setTimeout(() => {
+                fn.apply(this, arguments);
+            }, delay);
+        }
+        // 处理函数
+        function handle() {
+            console.log('防抖：', Math.random());
+        }
+        watch(()=>{
+            return text2.value
+        }, (newVal,oldVal) => {
+            debounce(handle,1000)
+        })
         return{
             name,
             nation,
@@ -115,7 +135,8 @@ export default {
             state,
             columns,
             del,
-            text
+            text,
+            text2
         } 
     }
 }

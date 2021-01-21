@@ -17,19 +17,19 @@
         </a-row>
         <div id="skill">
             <a-row class="row">
-                <a-button>Q</a-button>
+                <a-button :loading="!canRun.Q">Q</a-button>
                 <span class="exp">技能CD:2S</span>
             </a-row>
             <a-row class="row">
-                <a-button>W</a-button>
+                <a-button :loading="!canRun.W">W</a-button>
                 <span class="exp">技能CD:5S</span>
             </a-row>
             <a-row class="row">
-                <a-button>E</a-button>
+                <a-button :loading="!canRun.E">E</a-button>
                 <span class="exp">技能CD:10S</span>
             </a-row>
             <a-row class="row">
-                <a-button>R</a-button>
+                <a-button :loading="!canRun.R">R</a-button>
                 <span class="exp">技能CD:20S</span>
             </a-row>
         </div>

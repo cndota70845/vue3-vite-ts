@@ -1,18 +1,14 @@
 <template>
     <div class="Test">
-        <a-input v-model:value="test"></a-input>
-        {{test}}
+        <danmu></danmu>
     </div>
 </template>
 
 <script>
+import danmu from '../../plugin/danmu/danmu.vue';
 export default {
-    name:'Test',
-    data(){
-        return{
-            test:''
-        }
-    }
+  components: { danmu },
+    name:'Test'
 }
 </script>
 

@@ -1,8 +1,9 @@
 <template>
     <div class="danmu">
         <div class="video-wrapper">
+            <p>{{src}}</p>
             <canvas id="J_danmuCanvas"></canvas>
-            <video src="" id="J_danmuVideo" controls></video>
+            <video id="J_danmuVideo" ref='video' preload controls></video>
         </div>
         <div class="tool-box">
             <a-input class="text"></a-input>
@@ -13,8 +14,19 @@
 </template>
 
 <script>
+import danmuJS from '../danmu/js/index.js'
+import { onMounted,getCurrentInstance } from 'vue'
 export default {
-
+    name: 'danmu',
+    setup(props,context){
+        const { ctx } = getCurrentInstance();
+        onMounted(() => {
+            ctx.$refs.video.src = '/@/assets/video/three.kingdoms.mkv';
+            ctx.$refs.video.src = '/@/assets/video/three.kingdoms.mkv';
+            danmuJS.danmuJS();
+        })
+        return{}
+    }
 }
 </script>
 

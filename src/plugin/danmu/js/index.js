@@ -10,7 +10,7 @@ function danmuJS () {
     const init = () => {
         console.log(danmuData);
         //实例化弹幕插件
-        window.videoDanmu = new videoDanmu(
+        window.videoDanmu = new VideoDanmu(
             oDanmuVideo,
             oDanmuCanvas,
             {
@@ -22,14 +22,24 @@ function danmuJS () {
 
     //绑定事件处理函数的管理函数
     function bindEvent () {
+        oDanmuVideo.addEventListener('play', handleVideoPlay, false);
+        oDanmuVideo.addEventListener('pause',handleVideoPause, false);
+    }
 
+    function handleVideoPlay () {
+        videoDanmu.danmuPaused = false;
+        videoDanmu.render();
+    }
+
+    function handleVideoPause () {
+        videoDanmu.danmuPaused = true;
     }
 
     //执行模块初始化
     init();
 }
 
-class videoDanmu {
+class VideoDanmu {
     constructor (video, canvas, options) {
         if(!video || !canvas || !options || !isObject(options)) return;
         if(!options.danmuData || !isArray(options.danmuData)) return;
@@ -48,10 +58,39 @@ class videoDanmu {
         });
 
         this.danmuPool = this.createDanmuPool ();
-        console.log(this.danmuPool);
+        this.render();
     }
+
     createDanmuPool () {
         return this.danmuData.map(dm => new Danmu(dm, this));
+    }
+
+    render () {
+        this.clearRect();
+        this.drawDanmu();
+        !this.danmuPaused && requestAnimationFrame(this.render.bind(this));
+    }
+
+    drawDanmu () {
+        let currentTime = this.video.currentTime;
+        this.danmuPool.map((danmu) => {
+            if (!danmu.stopDrawing && currentTime >= danmu.runTime) {
+                if (!danmu.isInitialize) {
+                    danmu.initializ();
+                    danmu.isInitialize = true;
+                }
+                danmu.X -= danmu.speed;
+                danmu.draw();
+
+                if (danmu.X <= danmu.width * -1) {
+                    danmu.stopDrawing = true;
+                }
+            }
+        })
+    }
+
+    clearRect () {
+        this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }
 
@@ -65,8 +104,11 @@ function isArray (value) {
 }
 
 function getTextWidth (content, fontSize) {
+    //创建临时元素
     const _span = document.createElement('span');
+    //放入弹幕文本
     _span.innerText = content;
+    //设置文本字体大小
     _span.style.fontSize = fontSize + 'px';
     _span.style.position = 'absolute';
     document.body.appendChild(_span);
@@ -80,6 +122,9 @@ function getTextPosition (canvas, fontSize, ctx) {
         Y = canvas.height * Math.random();
     Y < fontSize && (Y = fontSize);
     Y > canvas.height - fontSize && (Y = canvas.height - fontSize);
+
+    ctx.X = X;
+    ctx.Y = Y;
 }
 
 class Danmu {
@@ -101,6 +146,12 @@ class Danmu {
         console.log(this.width);
         getTextPosition(this.ctx.canvas, this.fontSize, this);
         console.log(this);
+    }
+
+    draw () {
+        this.ctx.canvasCtx.font = this.fontSize + 'px Microsoft Yahei';
+        this.ctx.canvasCtx.fillStyle = this.color;
+        this.ctx.canvasCtx.fillText(this.content, this.X, this.Y);
     }
 }
 

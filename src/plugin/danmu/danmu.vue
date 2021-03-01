@@ -22,7 +22,6 @@ export default {
         const { ctx } = getCurrentInstance();
         onMounted(() => {
             ctx.$refs.video.src = '/@/assets/video/three.kingdoms.mkv';
-            ctx.$refs.video.src = '/@/assets/video/three.kingdoms.mkv';
             danmuJS.danmuJS();
         })
         return{}

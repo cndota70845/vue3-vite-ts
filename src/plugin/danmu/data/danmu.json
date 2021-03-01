@@ -1,5 +1,32 @@
 [
     {
-        
+        "content": "好喜欢1",
+        "speed": 2,
+        "runTime": 0,
+        "color": "#fff"
+    },
+    {
+        "content": "好喜欢2",
+        "speed": 2,
+        "runTime": 2,
+        "color": "#fff"
+    },
+    {
+        "content": "好喜欢3",
+        "speed": 2,
+        "runTime": 4,
+        "color": "#fff"
+    },
+    {
+        "content": "好喜欢4",
+        "speed": 2,
+        "runTime": 6,
+        "color": "#fff"
+    },
+    {
+        "content": "好喜欢5",
+        "speed": 2,
+        "runTime": 8,
+        "color": "#fff"
     }
 ]

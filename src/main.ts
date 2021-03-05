@@ -3,7 +3,7 @@ import App from './App.vue'
 import './index.css'
 import 'ant-design-vue/dist/antd.css'
 import router from './router'
-import {Menu,Layout,message,Input,Button,Row,Col,Table} from 'ant-design-vue'
+import { Menu, Layout, message, Input, Button, Row, Col, Table} from 'ant-design-vue'
 import api from './request/api/index'
 import cookies from "cookies-js";
 

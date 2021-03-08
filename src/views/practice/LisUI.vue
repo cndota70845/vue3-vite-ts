@@ -4,6 +4,7 @@
             :data="options"
             :curIndex="curINX"
             :clickMethod="clickMethod"
+            v-model="selectValue"
         >
         </lis-Selector>
     </div>
@@ -30,7 +31,7 @@ export default {
             }
         ]
         const curINX = ref(1);
-
+        const selectValue = ref(0);
 
         function clickMethod (val) {
             console.log('选中',val)
@@ -39,7 +40,8 @@ export default {
         return {
             options,
             clickMethod,
-            curINX
+            curINX,
+            selectValue
         }
     }
 }

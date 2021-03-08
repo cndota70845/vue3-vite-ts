@@ -2,11 +2,11 @@
     <div class="lis-select" ref="select">
         <div class="lis-select-selector">
             <div class="lis-select-input">
-
+                {{optionData[curInx].text}}
             </div>
             <div class="lis-select-options" v-show="optionShow">
                 <ul id="options">
-                    <li v-for="(item, index) in optionData" @click="optionMethod($event)" :value="item.value">
+                    <li v-for="(item, index) in optionData" :key="index" @click="optionMethod($event, index)" :value="item.value">
                         {{item.text}}
                     </li>
                 </ul>
@@ -27,11 +27,20 @@ import { getCurrentInstance, reactive, onMounted, toRefs, ref } from 'vue';
 
 export default {
     name: 'lis-Selector',
-    props: [
-        'data',
-        'curIndex',
-        'clickMethod'
-    ],
+    props: {
+        data: {
+            type: Array
+        },
+        curIndex: {
+            type: Number
+        },
+        clickMethod: {
+            type: Function
+        },
+        value: {
+            type: Number
+        }
+    },
     setup (props) {
         const { ctx } :any = getCurrentInstance();
         const selectorOptin = reactive({
@@ -58,8 +67,9 @@ export default {
             }
         }
 
-        function optionMethod(val) {
-            props.clickMethod(val);
+        function optionMethod(event, index) {
+            props.clickMethod(event.target.innerText);
+            curInx.value = index;
         }
 
         onMounted(()=>{
@@ -117,6 +127,7 @@ export default {
     text-indent: 10px;
 }
 .lis-select-input{
-
+    height: 32px;
+    line-height: 32px;
 }
 </style>

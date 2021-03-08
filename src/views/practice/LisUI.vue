@@ -4,7 +4,7 @@
             :data="options"
             :curIndex="curINX"
             :clickMethod="clickMethod"
-            v-model="selectValue"
+            v-model:value="selectValue"
         >
         </lis-Selector>
     </div>

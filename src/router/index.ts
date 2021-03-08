@@ -29,6 +29,11 @@ const router = createRouter({
           path: '/Test',
           name: 'Test',
           component: () => import('../views/practice/Test.vue')
+        },
+        {
+          path: '/LisUI',
+          name: 'LisUI',
+          component: () => import('../views/practice/LisUI.vue')
         }
       ]
     }

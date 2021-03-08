@@ -22,6 +22,12 @@ const menuArr=[
         key:'Test',
         content:'Test',
         icon:'ios-people',
+    },
+    {
+        id:5,
+        key:'LisUI',
+        content:'LisUI',
+        icon:'ios-people',
     }
 ]
 export default{

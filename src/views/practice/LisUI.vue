@@ -2,12 +2,13 @@
     <div>
         <lis-Selector 
             :data="options"
-            :curIndex="curINX"
             :clickMethod="clickMethod"
             v-model:value="selectValue"
+            :multiple="true"
         >
         </lis-Selector>
     </div>
+    <div>{{selectValue}}</div>
 </template>
 
 <script>
@@ -18,23 +19,23 @@ export default {
     setup () {
         const options = [
             {
-                value: 20,
+                value: '001',
                 text: '西瓜'
             },
             {
-                value: 30,
+                value: '002',
                 text: '草莓'
             },
             {
-                value: 100,
+                value: '003',
                 text: '车厘子'
             }
         ]
         const curINX = ref(1);
-        const selectValue = ref(0);
+        const selectValue = ref('');
 
-        function clickMethod (val) {
-            console.log('选中',val)
+        function clickMethod (options) {
+            console.log('选中',options.text, options.value)
         }
         
         return {

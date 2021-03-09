@@ -2,12 +2,21 @@
     <div class="lis-select" ref="select">
         <div class="lis-select-selector">
             <div class="lis-select-input">
-                {{optionData[curInx].text}}
+                <input ref="input" readonly>
+                <div class="opList">
+                    <span v-for="(item, index) in TextShow()">
+                        {{item}}
+                        <img alt="" src="/@/plugin/LisUI/assets/images/cancel.png">
+                    </span>
+                </div>
             </div>
             <div class="lis-select-options" v-show="optionShow">
                 <ul id="options">
-                    <li v-for="(item, index) in optionData" :key="index" @click="optionMethod($event, index)" :value="item.value">
+                    <li v-for="(item, index) in optionData" :key="item.id" @mousedown="optionMethod(item,index)">
                         {{item.text}}
+                        <span class="yes" v-show="IconShow(index)">
+                            <img alt=""> 
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -23,10 +32,34 @@
 </template>
 
 <script lang="ts">
-import { getCurrentInstance, reactive, onMounted, toRefs, ref } from 'vue';
+import { getCurrentInstance, reactive, onMounted, toRefs, watch } from 'vue';
+
+enum DOM {
+    click = 'click',
+    mouseover = 'mouseover',
+    mouseout = 'mouseout'
+}
+
+enum STYLE {
+    blue = 'rgb(24, 144, 255)',
+    black = 'rgba(0, 0, 0, 0.85)',
+    white = '#ffffff'
+}
+
+enum ELEMENT {
+    options = 'options',
+    li = 'li',
+    blank = '',
+    blueIcon = '/@/plugin/LisUI/assets/images/yes.png',
+    wihteIcon = '/@/plugin/LisUI/assets/images/yesf.png'
+}
 
 export default {
     name: 'lis-Selector',
+    model: {
+        prop: 'value',
+        event: 'input'
+    },
     props: {
         data: {
             type: Array
@@ -37,49 +70,106 @@ export default {
         clickMethod: {
             type: Function
         },
-        value: {
-            type: Number
+        value: {},
+        multiple: {
+            default: false
         }
     },
-    setup (props) {
+    setup (props, context) {
         const { ctx } :any = getCurrentInstance();
         const selectorOptin = reactive({
             optionShow: false,
-            optionData: props.data
+            optionData: props.data,
+            curInx: props.curIndex?props.curIndex:undefined,
+            newValue: props.multiple?[]:ELEMENT.blank,
+            InxList: []
         })
 
-        const clickMethod = props.clickMethod
-        const curInx = ref(props.curIndex);
-
         function init () {
-            ctx.$refs.select.addEventListener('click', function () {
-                selectorOptin.optionShow = !selectorOptin.optionShow;
+            ctx.$refs.input.addEventListener('focus', function () {
+                selectorOptin.optionShow = true
             })
-            let options = document.getElementById('options');
-            let optionsList = options.getElementsByTagName('li');
+            ctx.$refs.input.addEventListener('blur', function () {
+                selectorOptin.optionShow = false
+            })
+            let options = document.getElementById(ELEMENT.options);
+            let optionsList = options.getElementsByTagName(ELEMENT.li);
             for(let i = 0;i < optionsList.length; i++){
-                optionsList[i].addEventListener('mouseover', function () {
-                    optionsList[i].style.background = '#b0abab';
+                optionsList[i].addEventListener(DOM.mouseover, function () {
+                    optionsList[i].style.background = STYLE.blue;
+                    optionsList[i].style.color = STYLE.white;
+                    if(IconShow(i)){
+                        options.getElementsByTagName('img')[i].src = ELEMENT.wihteIcon
+                    }
                 })
-                optionsList[i].addEventListener('mouseout', function () {
-                    optionsList[i].style.background = '';
+                optionsList[i].addEventListener(DOM.mouseout, function () {
+                    optionsList[i].style.background = ELEMENT.blank;
+                    optionsList[i].style.color = STYLE.black;
+                    if(IconShow(i)){
+                        options.getElementsByTagName('img')[i].src = ELEMENT.blueIcon
+                    }
                 })
             }
         }
 
-        function optionMethod(event, index) {
-            props.clickMethod(event.target.innerText);
-            curInx.value = index;
+        function optionMethod(item, index) {
+            if (IconShow(index) === false) {
+                props.clickMethod(item);
+                selectorOptin.curInx = index;
+                if(props.multiple){
+                    (selectorOptin.newValue as any[]).push(item.value);
+                    selectorOptin.InxList.push(index);
+                    selectorOptin.optionData.filter((el)=>el.value!=item.value);
+                }
+                else{
+                    selectorOptin.newValue = item.value;
+                }
+            }
+        }
+
+        function TextShow () {
+            if (props.multiple === true) {
+                if (selectorOptin.InxList.length > 0) {
+                    let arr = [];
+                    selectorOptin.optionData.forEach((element,index) => {
+                        if(selectorOptin.InxList.includes(index)){
+                            arr.push(element.text);
+                        }
+                    });
+                    return arr;
+                }
+                else {
+                    return '';
+                }
+            }
+            else {
+                return selectorOptin.optionData[selectorOptin.curInx].text;
+            }
+        }
+
+        function IconShow (index) {
+            if (props.multiple === true && selectorOptin.InxList.includes(index)) {
+                return true;
+            }
+            else {
+                return false
+            }
         }
 
         onMounted(()=>{
             init();
         })
 
+        watch(() => selectorOptin.newValue, (newValue, oldValue) => {
+            console.log(newValue, oldValue);
+            context.emit('update:value', selectorOptin.newValue);
+        },{deep: true})
+
         return{
             ...toRefs(selectorOptin),
             optionMethod,
-            curInx
+            TextShow,
+            IconShow
         }
     }
 }
@@ -87,7 +177,7 @@ export default {
 
 <style>
 .lis-select{
-    width: 200px;
+    width: 100%;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -104,7 +194,6 @@ export default {
 .lis-select-selector{
     position: relative;
     background-color: #fff;
-    border: 1px solid #d9d9d9;
     border-radius: 2px;
     transition: all .3s cubic-bezier(.645,.045,.355,1);
     width: 100%;
@@ -129,5 +218,41 @@ export default {
 .lis-select-input{
     height: 32px;
     line-height: 32px;
+}
+.lis-select-input input{
+    position: absolute;
+    height: 30px;
+    line-height: 30px;
+    border: none;
+    width: 100%;
+    left: 0;
+    padding: 0 11px;
+    border: 1px solid #d9d9d9;
+}
+.lis-select-input input:focus{
+    outline: none;
+    border: 1px solid rgb(24, 144, 255);
+    box-shadow: 0 0 0 2px rgb(24 144 255 / 20%);
+}
+.yes{
+    position: absolute;
+    right: 11px;
+}
+.lis-select-input .opList{
+    position: absolute;
+    left: 11px;
+    height: 30px;
+}
+.lis-select-input .opList span{
+    vertical-align: middle;
+    position: relative;
+    padding: 2px 10px;
+    background: #f5f5f5;
+    border:1px solid rgb(217, 217, 217);
+    margin-right:5px;
+}
+.opList img{
+    height: 13px;
+    width: 13px;
 }
 </style>

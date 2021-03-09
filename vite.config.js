@@ -1,4 +1,5 @@
 const {resolve} = require('path')
+const { sourceMapPlugin } = require('vite/dist/node/server/serverPluginSourceMap')
 module.exports = {
     base: '/',
     port: 3000,

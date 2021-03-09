@@ -6,7 +6,7 @@
                 <div class="opList">
                     <span v-for="(item, index) in TextShow()">
                         {{item}}
-                        <img alt="" src="/@/plugin/LisUI/assets/images/cancel.png">
+                        <div class="cancel" @click="optionCancel(index)"><img alt="" src="/@/plugin/LisUI/assets/images/cancel.png"><div>
                     </span>
                 </div>
             </div>
@@ -15,7 +15,7 @@
                     <li v-for="(item, index) in optionData" :key="item.id" @mousedown="optionMethod(item,index)">
                         {{item.text}}
                         <span class="yes" v-show="IconShow(index)">
-                            <img alt=""> 
+                            <img alt="">
                         </span>
                     </li>
                 </ul>
@@ -99,14 +99,14 @@ export default {
                     optionsList[i].style.background = STYLE.blue;
                     optionsList[i].style.color = STYLE.white;
                     if(IconShow(i)){
-                        options.getElementsByTagName('img')[i].src = ELEMENT.wihteIcon
+                        options.getElementsByTagName('img')[i].src = ELEMENT.wihteIcon;
                     }
                 })
                 optionsList[i].addEventListener(DOM.mouseout, function () {
                     optionsList[i].style.background = ELEMENT.blank;
                     optionsList[i].style.color = STYLE.black;
                     if(IconShow(i)){
-                        options.getElementsByTagName('img')[i].src = ELEMENT.blueIcon
+                        options.getElementsByTagName('img')[i].src = ELEMENT.blueIcon;
                     }
                 })
             }
@@ -156,12 +156,16 @@ export default {
             }
         }
 
+        function optionCancel (index) {
+            selectorOptin.InxList.splice(index, 1);
+            (selectorOptin.newValue as any[]).splice(index, 1);
+        }
+
         onMounted(()=>{
             init();
         })
 
         watch(() => selectorOptin.newValue, (newValue, oldValue) => {
-            console.log(newValue, oldValue);
             context.emit('update:value', selectorOptin.newValue);
         },{deep: true})
 
@@ -169,7 +173,8 @@ export default {
             ...toRefs(selectorOptin),
             optionMethod,
             TextShow,
-            IconShow
+            IconShow,
+            optionCancel
         }
     }
 }
@@ -239,20 +244,44 @@ export default {
     right: 11px;
 }
 .lis-select-input .opList{
-    position: absolute;
-    left: 11px;
+    padding-left: 4px;
     height: 30px;
+    display: table-cell;
+    vertical-align: middle;
 }
 .lis-select-input .opList span{
-    vertical-align: middle;
     position: relative;
-    padding: 2px 10px;
+    display: flex;
+    flex: none;
+    box-sizing: border-box;
+    max-width: 100%;
+    height: 24px;
+    margin-top: 2px;
+    margin-right: 4px;
+    margin-bottom: 2px;
+    padding: 0 20px 0 6px;
+    line-height: 22px;
     background: #f5f5f5;
-    border:1px solid rgb(217, 217, 217);
-    margin-right:5px;
+    border: 1px solid #f0f0f0;
+    border-radius: 2px;
+    cursor: default;
+    transition: font-size .3s,line-height .3s,height .3s;
+    user-select: none;
+    float: left;
 }
-.opList img{
-    height: 13px;
+.opList .cancel{
+    position: absolute;
+    height: 100%;
     width: 13px;
+    right: 2px;
+    top: 0;
+    display: table-cell;
+    vertical-align: middle;
+}
+.opList .cancel:hover{
+    cursor: pointer;
+}
+.cancel img{
+    height: 10px;
 }
 </style>

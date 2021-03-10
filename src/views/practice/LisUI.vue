@@ -4,7 +4,8 @@
             :data="options"
             :clickMethod="clickMethod"
             v-model:value="selectValue"
-            :multiple="true"
+            :search="true"
+            :placeholder="msg"
         >
         </lis-Selector>
     </div>
@@ -33,6 +34,7 @@ export default {
         ]
         const curINX = ref(1);
         const selectValue = ref('');
+        const msg = '请在这个框里面填写信息'
 
         function clickMethod (options) {
             console.log('选中',options.text, options.value)
@@ -42,7 +44,8 @@ export default {
             options,
             clickMethod,
             curINX,
-            selectValue
+            selectValue,
+            msg
         }
     }
 }

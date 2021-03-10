@@ -2,11 +2,14 @@
     <div class="lis-select" ref="select">
         <div class="lis-select-selector">
             <div class="lis-select-input">
-                <input ref="input" readonly>
-                <div class="opList">
+                <input ref="input">
+                <div class="placeholder" ref="placeholder"></div>
+                <div class="opList" v-if="multiple === true" ref="multiple">
                     <span v-for="(item, index) in TextShow()">
                         {{item}}
-                        <div class="cancel" @click="optionCancel(index)"><img alt="" src="/@/plugin/LisUI/assets/images/cancel.png"><div>
+                        <div class="cancel" @click="optionCancel(index)">
+                            <img alt="" src="/@/plugin/LisUI/assets/images/cancel.png">
+                        </div>
                     </span>
                 </div>
             </div>
@@ -37,7 +40,9 @@ import { getCurrentInstance, reactive, onMounted, toRefs, watch } from 'vue';
 enum DOM {
     click = 'click',
     mouseover = 'mouseover',
-    mouseout = 'mouseout'
+    mouseout = 'mouseout',
+    focus ='focus',
+    blur = 'blur'
 }
 
 enum STYLE {
@@ -51,7 +56,13 @@ enum ELEMENT {
     li = 'li',
     blank = '',
     blueIcon = '/@/plugin/LisUI/assets/images/yes.png',
-    wihteIcon = '/@/plugin/LisUI/assets/images/yesf.png'
+    wihteIcon = '/@/plugin/LisUI/assets/images/yesf.png',
+    cancelIcon = '/@/plugin/LisUI/assets/images/cancel.png',
+    cancelHoverIcon = '/@/plugin/LisUI/assets/images/cancelHover.png',
+    img = 'img',
+    placeholder = '请输入',
+    none = 'none',
+    block = 'block'
 }
 
 export default {
@@ -71,8 +82,10 @@ export default {
             type: Function
         },
         value: {},
-        multiple: {
-            default: false
+        multiple: {},
+        search: {},
+        placeholder: {
+            default: ELEMENT.placeholder
         }
     },
     setup (props, context) {
@@ -82,15 +95,24 @@ export default {
             optionData: props.data,
             curInx: props.curIndex?props.curIndex:undefined,
             newValue: props.multiple?[]:ELEMENT.blank,
-            InxList: []
+            InxList: [],
+            multiple: props.multiple || false,
+            search: props.search || false
         })
 
         function init () {
-            ctx.$refs.input.addEventListener('focus', function () {
-                selectorOptin.optionShow = true
+            ctx.$refs.placeholder.innerText = props.placeholder;
+            ctx.$refs.input.addEventListener(DOM.focus, function () {
+                selectorOptin.optionShow = true;
+                if (selectorOptin.newValue == ELEMENT.blank) {
+                    ctx.$refs.placeholder.style.display = ELEMENT.none;
+                }
             })
-            ctx.$refs.input.addEventListener('blur', function () {
-                selectorOptin.optionShow = false
+            ctx.$refs.input.addEventListener(DOM.blur, function () {
+                selectorOptin.optionShow = false;
+                if (selectorOptin.newValue == ELEMENT.blank) {
+                    ctx.$refs.placeholder.style.display = ELEMENT.block;
+                }
             })
             let options = document.getElementById(ELEMENT.options);
             let optionsList = options.getElementsByTagName(ELEMENT.li);
@@ -99,16 +121,16 @@ export default {
                     optionsList[i].style.background = STYLE.blue;
                     optionsList[i].style.color = STYLE.white;
                     if(IconShow(i)){
-                        options.getElementsByTagName('img')[i].src = ELEMENT.wihteIcon;
+                        options.getElementsByTagName(ELEMENT.img)[i].src = ELEMENT.wihteIcon;
                     }
-                })
+                });
                 optionsList[i].addEventListener(DOM.mouseout, function () {
                     optionsList[i].style.background = ELEMENT.blank;
                     optionsList[i].style.color = STYLE.black;
                     if(IconShow(i)){
-                        options.getElementsByTagName('img')[i].src = ELEMENT.blueIcon;
+                        options.getElementsByTagName(ELEMENT.img)[i].src = ELEMENT.blueIcon;
                     }
-                })
+                });
             }
         }
 
@@ -122,18 +144,21 @@ export default {
                     selectorOptin.optionData.filter((el)=>el.value!=item.value);
                 }
                 else{
+                    ctx.$refs.input.value = item.text;
+                    ctx.$refs.input.readonly = true;
                     selectorOptin.newValue = item.value;
                 }
             }
         }
 
         function TextShow () {
-            if (props.multiple === true) {
+            if (props.multiple && props.multiple === true) {
                 if (selectorOptin.InxList.length > 0) {
                     let arr = [];
-                    selectorOptin.optionData.forEach((element,index) => {
-                        if(selectorOptin.InxList.includes(index)){
-                            arr.push(element.text);
+                    selectorOptin.InxList.forEach((element,index) => {
+                        let text = selectorOptin.optionData.filter((item, num) => num === element);
+                        if (text.length > 0) {
+                            arr.push(text[0].text);
                         }
                     });
                     return arr;
@@ -148,7 +173,7 @@ export default {
         }
 
         function IconShow (index) {
-            if (props.multiple === true && selectorOptin.InxList.includes(index)) {
+            if (props.multiple && props.multiple === true && selectorOptin.InxList.includes(index)) {
                 return true;
             }
             else {
@@ -159,6 +184,9 @@ export default {
         function optionCancel (index) {
             selectorOptin.InxList.splice(index, 1);
             (selectorOptin.newValue as any[]).splice(index, 1);
+            if (selectorOptin.newValue.toString() === ELEMENT.blank) {
+                ctx.$refs.placeholder.style.display = ELEMENT.block;
+            }
         }
 
         onMounted(()=>{
@@ -167,6 +195,9 @@ export default {
 
         watch(() => selectorOptin.newValue, (newValue, oldValue) => {
             context.emit('update:value', selectorOptin.newValue);
+            if (selectorOptin.newValue.toString() === ELEMENT.blank) {
+                ctx.$refs.placeholder.style.display = ELEMENT.block;
+            }
         },{deep: true})
 
         return{
@@ -181,7 +212,11 @@ export default {
 </script>
 
 <style>
-.lis-select{
+.placeholder {
+    text-align: left;
+    color: #bfbfbf;
+}
+.lis-select {
     width: 100%;
     box-sizing: border-box;
     margin: 0;
@@ -196,7 +231,7 @@ export default {
     display: inline-block;
     cursor: pointer;
 }
-.lis-select-selector{
+.lis-select-selector {
     position: relative;
     background-color: #fff;
     border-radius: 2px;
@@ -205,7 +240,7 @@ export default {
     height: 32px;
     padding: 0 11px;
 }
-.lis-select-options{
+.lis-select-options {
     position: absolute;
     top: 32px;
     left: 0;
@@ -213,18 +248,18 @@ export default {
     height: auto;
     border:1px solid rgb(217, 217, 217);
 }
-.lis-select-options ul{
+.lis-select-options ul {
     margin: 0;
     padding: 0;
     list-style: none;
     text-align: left;
     text-indent: 10px;
 }
-.lis-select-input{
+.lis-select-input {
     height: 32px;
     line-height: 32px;
 }
-.lis-select-input input{
+.lis-select-input input {
     position: absolute;
     height: 30px;
     line-height: 30px;
@@ -233,23 +268,24 @@ export default {
     left: 0;
     padding: 0 11px;
     border: 1px solid #d9d9d9;
+    background: none;
 }
-.lis-select-input input:focus{
+.lis-select-input input:focus {
     outline: none;
     border: 1px solid rgb(24, 144, 255);
     box-shadow: 0 0 0 2px rgb(24 144 255 / 20%);
 }
-.yes{
+.yes {
     position: absolute;
     right: 11px;
 }
-.lis-select-input .opList{
+.lis-select-input .opList {
     padding-left: 4px;
     height: 30px;
     display: table-cell;
     vertical-align: middle;
 }
-.lis-select-input .opList span{
+.lis-select-input .opList span {
     position: relative;
     display: flex;
     flex: none;
@@ -269,7 +305,7 @@ export default {
     user-select: none;
     float: left;
 }
-.opList .cancel{
+.opList .cancel {
     position: absolute;
     height: 100%;
     width: 13px;
@@ -278,10 +314,10 @@ export default {
     display: table-cell;
     vertical-align: middle;
 }
-.opList .cancel:hover{
+.opList .cancel:hover {
     cursor: pointer;
 }
-.cancel img{
+.cancel img {
     height: 10px;
 }
 </style>

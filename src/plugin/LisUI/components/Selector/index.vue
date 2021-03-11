@@ -132,6 +132,7 @@ export default {
                     }
                 });
             }
+            defaultValue();
         }
 
         function optionMethod(item, index) {
@@ -186,6 +187,32 @@ export default {
             (selectorOptin.newValue as any[]).splice(index, 1);
             if (selectorOptin.newValue.toString() === ELEMENT.blank) {
                 ctx.$refs.placeholder.style.display = ELEMENT.block;
+            }
+        }
+
+        function defaultValue () {
+            if (props.value.toString != '') {
+                if (props.multiple && props.multiple === true) {
+                    var arr = [];
+                    selectorOptin.optionData.forEach((element, index) => {
+                        if (props.value.includes(element.value)) {
+                            selectorOptin.InxList.push(index);
+                            ctx.$refs.placeholder.style.display = ELEMENT.none;
+                            arr.push(element.value);
+                        }
+                    });
+                    TextShow();
+                    selectorOptin.newValue = arr;
+                }
+                else {
+                    selectorOptin.optionData.forEach((element, index) => {
+                        if ( element.value == props.value) {
+                            selectorOptin.curInx = index;
+                            optionMethod(element, index);
+                            ctx.$refs.placeholder.style.display = ELEMENT.none;
+                        }
+                    });
+                }
             }
         }
 

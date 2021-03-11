@@ -34,6 +34,11 @@ const router = createRouter({
           path: '/LisUI',
           name: 'LisUI',
           component: () => import('../views/practice/LisUI.vue')
+        },
+        {
+          path: '/LogicFlow',
+          name: 'LogicFlow',
+          component: () => import('../views/practice/LogicFlow.vue')
         }
       ]
     }

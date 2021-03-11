@@ -1,15 +1,19 @@
 <template>
-    <div>
-        <lis-Selector 
-            :data="options"
-            :clickMethod="clickMethod"
-            v-model:value="selectValue"
-            :search="true"
-            :placeholder="msg"
-        >
+    <div class="LisUI">
+        <div class="input">
+            <lis-Selector 
+                :data="options"
+                :clickMethod="clickMethod"
+                v-model:value="selectValue"
+                :search="true"
+                :placeholder="msg"
+                :multiple="true"
+            >
         </lis-Selector>
+        <div>{{selectValue}}</div>
+        </div>
     </div>
-    <div>{{selectValue}}</div>
+    
 </template>
 
 <script>
@@ -33,7 +37,7 @@ export default {
             }
         ]
         const curINX = ref(1);
-        const selectValue = ref('');
+        const selectValue = ref(['002','001']);
         const msg = '请在这个框里面填写信息'
 
         function clickMethod (options) {
@@ -51,6 +55,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.input {
+    width: 300px;
+    margin: 0 auto;
+}
 </style>

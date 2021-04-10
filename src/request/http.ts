@@ -11,7 +11,7 @@ enum situation{
     development='development',
     production='production'
 }
-const baseURL:string = import.meta.env.VITE_APP_DOMAIN
+const baseURL:string = import.meta.env.VITE_APP_DOMAIN;
 if (process.env.NODE_ENV === situation.development) {
     console.log(situation.node+process.env.NODE_ENV)
     console.log(situation.baseURL+baseURL)

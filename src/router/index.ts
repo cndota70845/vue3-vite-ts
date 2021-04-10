@@ -39,6 +39,11 @@ const router = createRouter({
           path: '/LogicFlow',
           name: 'LogicFlow',
           component: () => import('../views/practice/LogicFlow.vue')
+        },
+        {
+          path: '/LeetCode',
+          name: 'LeetCode',
+          component: () => import('../views/practice/leetcode.vue')
         }
       ]
     }

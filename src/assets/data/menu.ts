@@ -34,6 +34,12 @@ const menuArr=[
         key:'LogicFlow',
         content:'LogicFlow',
         icon:'ios-people',
+    },
+    {
+        id:7,
+        key:'LeetCode',
+        content:'LeetCode',
+        icon:'ios-people',
     }
 ]
 export default{

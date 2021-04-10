@@ -1,8 +1,8 @@
 <template>
-    <div class="lis-select" ref="select">
-        <div class="lis-select-selector">
+    <div class="lis-select" ref="select" v-focus>
+        <div class="lis-select-selector" >
             <div class="lis-select-input">
-                <input ref="input">
+                <input ref="input" @input="searchOptions($event)">
                 <div class="placeholder" ref="placeholder"></div>
                 <div class="opList" v-if="multiple === true" ref="multiple">
                     <span v-for="(item, index) in TextShow()">
@@ -15,7 +15,7 @@
             </div>
             <div class="lis-select-options" v-show="optionShow">
                 <ul id="options">
-                    <li v-for="(item, index) in optionData" :key="item.id" @mousedown="optionMethod(item,index)">
+                    <li v-for="(item, index) in showOptin" :key="item.id" @mousedown="optionMethod(item,index)">
                         {{item.text}}
                         <span class="yes" v-show="IconShow(index)">
                             <img alt="">
@@ -36,6 +36,8 @@
 
 <script lang="ts">
 import { getCurrentInstance, reactive, onMounted, toRefs, watch } from 'vue';
+import focus from '../../directive/slectorInput';
+import method from '../../method/debouce';
 
 enum DOM {
     click = 'click',
@@ -48,7 +50,10 @@ enum DOM {
 enum STYLE {
     blue = 'rgb(24, 144, 255)',
     black = 'rgba(0, 0, 0, 0.85)',
-    white = '#ffffff'
+    white = '#ffffff',
+    gray = 'rgb(217, 217, 217)',
+    left = 'left',
+    center = 'center'
 }
 
 enum ELEMENT {
@@ -67,6 +72,9 @@ enum ELEMENT {
 
 export default {
     name: 'lis-Selector',
+    directives: {
+        focus
+    },
     model: {
         prop: 'value',
         event: 'input'
@@ -97,25 +105,59 @@ export default {
             newValue: props.multiple?[]:ELEMENT.blank,
             InxList: [],
             multiple: props.multiple || false,
-            search: props.search || false
+            search: props.search || false,
+            searchValue: '',
+            showOptin: props.data
         })
 
+        function searchOptions (e) {
+            const v = e.target.value;
+            method.debounce(function (val?: string) {
+                if (val) {
+                    console.log('hehehhe');
+                    const newOptions = selectorOptin.optionData.filter(item => item.text.includes(val));
+                    selectorOptin.showOptin = newOptions;
+                }
+                else{
+                    selectorOptin.showOptin = props.data;
+                }
+            }, 500, v);
+        }
+        
         function init () {
-            ctx.$refs.placeholder.innerText = props.placeholder;
-            ctx.$refs.input.addEventListener(DOM.focus, function () {
+            const placeholder = ctx.$refs.placeholder,
+                  input = ctx.$refs.input,
+                  options = document.getElementById(ELEMENT.options),
+                  optionsList = options.getElementsByTagName(ELEMENT.li);
+
+            input.addEventListener(DOM.focus, function () {
                 selectorOptin.optionShow = true;
                 if (selectorOptin.newValue == ELEMENT.blank) {
-                    ctx.$refs.placeholder.style.display = ELEMENT.none;
+                    placeholder.style.display = ELEMENT.none;
+                    if (selectorOptin.search == true) {
+                        input.readonly = true;
+                    }
+                    else{
+                        input.readonly = false;
+                    }
                 }
-            })
-            ctx.$refs.input.addEventListener(DOM.blur, function () {
+                else if (selectorOptin.search == true){
+                    input.style.color = STYLE.gray;
+                    input.readonly = true;
+                    input.style.textAlign = STYLE.left;
+                }
+            }, false)
+            input.addEventListener(DOM.blur, function () {
                 selectorOptin.optionShow = false;
                 if (selectorOptin.newValue == ELEMENT.blank) {
-                    ctx.$refs.placeholder.style.display = ELEMENT.block;
+                    placeholder.style.display = ELEMENT.block;
                 }
-            })
-            let options = document.getElementById(ELEMENT.options);
-            let optionsList = options.getElementsByTagName(ELEMENT.li);
+                else if (selectorOptin.search == true){
+                    input.style.color = STYLE.black;
+                    input.style.textAlign = STYLE.center;   
+                }
+            }, false)
+
             for(let i = 0;i < optionsList.length; i++){
                 optionsList[i].addEventListener(DOM.mouseover, function () {
                     optionsList[i].style.background = STYLE.blue;
@@ -123,14 +165,14 @@ export default {
                     if(IconShow(i)){
                         options.getElementsByTagName(ELEMENT.img)[i].src = ELEMENT.wihteIcon;
                     }
-                });
+                }, false);
                 optionsList[i].addEventListener(DOM.mouseout, function () {
                     optionsList[i].style.background = ELEMENT.blank;
                     optionsList[i].style.color = STYLE.black;
                     if(IconShow(i)){
                         options.getElementsByTagName(ELEMENT.img)[i].src = ELEMENT.blueIcon;
                     }
-                });
+                }, false);
             }
             defaultValue();
         }
@@ -232,7 +274,8 @@ export default {
             optionMethod,
             TextShow,
             IconShow,
-            optionCancel
+            optionCancel,
+            searchOptions
         }
     }
 }
@@ -296,6 +339,8 @@ export default {
     padding: 0 11px;
     border: 1px solid #d9d9d9;
     background: none;
+    cursor: pointer;
+    text-align: center;
 }
 .lis-select-input input:focus {
     outline: none;

@@ -85,6 +85,27 @@ export default {
         }
 
         function addNode () {
+            lf.register('user', ({ RectNode, RectNodeModel, h }) => {
+                // 提供节点
+                class UserNode extends RectNode {
+                }
+                // 提供节点的属性
+                class UserModel extends RectNodeModel {
+                    constructor(data) {
+                    super(data);
+                    const { size } = data.properties;
+                    this.width = size * 40;
+                    this.height = size * 40;
+                    this.fill = 'green';
+                    }
+                }
+                // 返回 view 和 model
+                return {
+                    view: UserNode,
+                    model: UserModel,
+                };
+            });
+
             lf.addNode({
                 type: 'user',
                 x: 500,

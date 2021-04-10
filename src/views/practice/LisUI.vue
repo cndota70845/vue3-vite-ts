@@ -7,10 +7,9 @@
                 v-model:value="selectValue"
                 :search="true"
                 :placeholder="msg"
-                :multiple="true"
             >
-        </lis-Selector>
-        <div>{{selectValue}}</div>
+            </lis-Selector>
+            <div>{{selectValue}}</div>
         </div>
     </div>
     
@@ -37,7 +36,7 @@ export default {
             }
         ]
         const curINX = ref(1);
-        const selectValue = ref(['002','001']);
+        const selectValue = ref('001');
         const msg = '请在这个框里面填写信息'
 
         function clickMethod (options) {

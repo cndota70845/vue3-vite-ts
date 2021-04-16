@@ -40,6 +40,12 @@ const menuArr=[
         key:'LeetCode',
         content:'LeetCode',
         icon:'ios-people',
+    },
+    {
+        id:7,
+        key:'Wheel',
+        content:'Wheel',
+        icon:'ios-people',
     }
 ]
 export default{

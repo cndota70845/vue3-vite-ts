@@ -44,11 +44,6 @@ const router = createRouter({
           path: '/LeetCode',
           name: 'LeetCode',
           component: () => import('../views/practice/leetcode.vue')
-        },
-        {
-          path: '/Wheel',
-          name: 'Wheel',
-          component: () => import('../views/practice/Wheel.vue')
         }
       ]
     }

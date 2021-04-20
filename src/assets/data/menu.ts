@@ -42,9 +42,15 @@ const menuArr=[
         icon:'ios-people',
     },
     {
-        id:7,
+        id:8,
         key:'Wheel',
         content:'Wheel',
+        icon:'ios-people',
+    },
+    {
+        id:9,
+        key:'TestJS',
+        content:'TestJS',
         icon:'ios-people',
     }
 ]

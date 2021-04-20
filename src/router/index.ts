@@ -49,6 +49,11 @@ const router = createRouter({
           path: '/Wheel',
           name: 'Wheel',
           component: () => import('../views/practice/Wheel.vue')
+        },
+        {
+          path: '/TestJS',
+          name: 'TestJS',
+          component: () => import('../views/practice/testJs.vue')
         }
       ]
     }

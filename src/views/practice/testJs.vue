@@ -1,41 +1,91 @@
 <template>
-    <div>
-
+    <div class="testJS">
+        <h1>1.float布局：(是专门为IE准备的);</h1>
+        <div class="header">
+            <div class="Logo">
+                Logo
+            </div>
+            <div class="Name">
+                Name
+            </div>
+            <div class="Search">
+                Search
+            </div>
+        </div>
+        <h1>2.flex布局：</h1>
+        <div class="container">
+            <template v-for="(item,index) in menu" :key="index">
+                <div :class="className(item.status)" @click="changeColor(index)">
+                    {{item.name}}
+                </div>
+            </template>
+        </div>
+        <h1>3.Grid布局：（功能最强大的布局方案）</h1>
+        <div class="containerGrid">
+            <template v-for="(item,index) in menu" :key="index">
+                <div class="itemGrid" @click="Animation(index)">
+                    {{item.name}}
+                </div>
+            </template>
+        </div>
     </div>
 </template>
 
 <script>
+import { reactive, toRefs} from 'vue';
 export default {
     name:'testJS',
     setup () {
-        // let arr = [99,99,1,1,2,3,4,5,5,6];
-        // //Set去重 + sort排序;
-        // let arr2 = Array.from(new Set(arr)).sort();
-        // //重新返回一个每个元素循环一次回调返回的数组;
-        // let arr3 = arr.reduce(function(acc,cur,idx,src) {
-        //     if(!acc.includes(cur)) {
-        //         acc.push({
-        //             id:idx + 1,
-        //             value:cur,
-        //         });
-        //     }
-        //     return acc;
-        // },[]);
-        // console.log(arr,arr2,arr3);
+        const menu = [
+            'Vue3',
+            'TS',
+            'Axios',
+            'Test',
+            'LisUI',
+            'LogicFlow'
+        ]
 
-        const test = new Promise(function(resolve, reject) {
-            setTimeout(function () {
-                let code = 1;
-                resolve(code);
-            },2000);
+        const active = reactive({
+            menu:menu.reduce(function(acc,cur,idx,src) {
+                acc.push({
+                    name:cur,
+                    status:0
+                });
+                return acc;
+            },[])
         });
-        test.then((val) => {
-            console.log(`val是:${val}`);
-        });
+
+        function className (sta) {
+            if (sta) {
+                return 'item on';
+            }
+            else {
+                return 'item';
+            }
+        }
+
+        function changeColor (idx) {
+            if (active.menu.some((item)=>{
+                return item.status === 1;
+            })) {
+                active.menu.forEach((item,index) => {
+                    if (item.status === 1) {
+                        active.menu[index].status = 0;
+                    }
+                });
+            }
+            active.menu[idx].status = 1;
+        }
+
+        return {
+            ...toRefs(active),
+            className,
+            changeColor
+        }
     }
 }
 </script>
 
-<style>
-
+<style lang="less">
+    @import './testJS.less';
 </style>

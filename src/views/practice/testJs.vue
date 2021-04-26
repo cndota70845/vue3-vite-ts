@@ -23,11 +23,13 @@
         <h1>3.Grid布局：（功能最强大的布局方案）</h1>
         <div class="containerGrid">
             <template v-for="(item,index) in menu" :key="index">
-                <div class="itemGrid" @click="Animation(index)">
+                <div class="itemGrid">
                     {{item.name}}
                 </div>
             </template>
         </div>
+        <div class="example2Left"></div>
+        <div class="example2Right"></div>
     </div>
 </template>
 
@@ -76,6 +78,16 @@ export default {
             }
             active.menu[idx].status = 1;
         }
+
+        var a = new Sortable('.example2Left', {
+            group: 'shared', // set both lists to same group
+            animation: 150
+        });
+        
+        var b = new Sortable('.example2Right', {
+            group: 'shared',
+            animation: 150
+        });
 
         return {
             ...toRefs(active),

@@ -1,0 +1,42 @@
+[
+    {
+      "name": "vue.draggable",
+      "id": 1,
+      "drag": false
+    },
+    {
+      "name": "draggable",
+      "id": 2,
+      "drag": false
+    },
+    {
+      "name": "component",
+      "id": 3,
+      "drag": false
+    },
+    {
+      "name": "for",
+      "id": 4,
+      "drag": false
+    },
+    {
+      "name": "vue.js 2.0",
+      "id": 5,
+      "drag": false
+    },
+    {
+      "name": "based",
+      "id": 6,
+      "drag": false
+    },
+    {
+      "name": "on",
+      "id": 7,
+      "drag": false
+    },
+    {
+      "name": "Sortablejs",
+      "id": 8,
+      "drag": false
+    }
+]

@@ -28,16 +28,27 @@
                 </div>
             </template>
         </div>
-        <div class="example2Left"></div>
-        <div class="example2Right"></div>
+        <h2>{{list}}</h2>
+        <div class="containerDrag">
+            <div id="draggable" class="wrapper">
+                <div v-for="(item,index) in list" :key="index" :idx="item.id" class="dragItem">
+                    <p>{{item.name}}</p>
+                </div>
+            </div>
+            <div id="dragArea" class="area">
+                
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-import { reactive, toRefs} from 'vue';
+import { reactive, toRefs, getCurrentInstance, onMounted} from 'vue';
+import list from '/@/views/practice/list.json';
 export default {
     name:'testJS',
     setup () {
+        const { proxy } = getCurrentInstance();
         const menu = [
             'Vue3',
             'TS',
@@ -54,7 +65,8 @@ export default {
                     status:0
                 });
                 return acc;
-            },[])
+            },[]),
+            list:list
         });
 
         function className (sta) {
@@ -79,15 +91,40 @@ export default {
             active.menu[idx].status = 1;
         }
 
-        var a = new Sortable('.example2Left', {
-            group: 'shared', // set both lists to same group
-            animation: 150
+        onMounted(() => {
+            initDrag();
         });
-        
-        var b = new Sortable('.example2Right', {
-            group: 'shared',
-            animation: 150
-        });
+
+        function initDrag() {
+            const draggable = document.querySelector('#draggable').querySelectorAll('.dragItem');
+            draggable.forEach(item => {
+                let id = item.getAttribute('idx');
+                let idx = active.list.findIndex((element) => { return element.id == id;});
+                //鼠标按下事件
+                item.addEventListener('mousedown',() => {
+                    item.style.backgroundColor = 'rgb(44, 62, 80)';
+                    item.style.position = 'absolute';
+                    if (idx !== -1) {
+                        active.list[idx].drag = true;
+                    }
+                });
+                //鼠标移动事件
+                item.addEventListener('mousemove',(event) => {
+                    if (idx !== -1 && active.list[idx].drag ) {
+                        let left = event.clientX;
+                        let right = event.clientY;
+                        console.log(left,right);   
+                    }
+                });
+                //鼠标抬起事件
+                item.addEventListener('mouseup',() => {
+                    item.style.backgroundColor = 'rgb(66, 185, 131)';
+                    if (idx !== -1) {
+                        active.list[idx].drag = false;
+                    }
+                });
+            });
+        } 
 
         return {
             ...toRefs(active),

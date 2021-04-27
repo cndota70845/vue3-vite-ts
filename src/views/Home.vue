@@ -79,6 +79,6 @@ export default {
     height: 100%;
 }
 #components-layout-demo-top{
-    height: 100%;
+    min-height: 100%;
 }
 </style>

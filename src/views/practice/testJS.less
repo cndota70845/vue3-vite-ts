@@ -78,6 +78,42 @@
     }
 }
 
+.containerDrag {
+    display: -webkit-flex; /* Safari */
+    display: flex;
+    flex-direction:row; /* 主轴的方向  row | row-reverse | column | column-reverse;*/
+    flex-wrap: nowrap; /* 如何换行  nowrap | wrap | wrap-reverse;*/
+    justify-content:space-between;/* 定义了项目在主轴上的对齐方式 flex-start | flex-end | center | space-between | space-around*/
+    align-items: center;/* 定义项目在交叉轴上如何对齐 flex-start | flex-end | center | baseline | stretch*/
+    align-content:center;/* flex-start | flex-end | center | space-between | space-around | stretch */
+    width: 100%;
+    min-height: 400px;
+    background-color: #ffffff;
+    .wrapper {
+        display: flex;
+        flex-direction:column;
+        justify-content: center;
+        width: 300px;
+        position: relative;
+        .dragItem {
+            height: 50px;
+            line-height: 50px;
+            background-color: #42b983;
+            color: #ffffff;
+        }
+        .dragItem:hover {
+            cursor: pointer;
+            font-weight: bold;
+        }
+    }
+    .area {
+        width: calc(100% - 300px);
+        min-height: 400px;
+        background-color: lightcoral;
+    }
+}
+
+
 /* 动画代码 */
 @keyframes example {
     from {background-color: red;}

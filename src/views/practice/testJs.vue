@@ -101,7 +101,12 @@ export default {
                 let id = item.getAttribute('idx');
                 let idx = active.list.findIndex((element) => { return element.id == id;});
                 //鼠标按下事件
-                item.addEventListener('mousedown',() => {
+                item.addEventListener('mousedown',(event) => {
+                    let offsetX = parseInt(item.style.left); // 获取当前的x轴距离
+                    let offsetY = parseInt(item.style.top); // 获取当前的y轴距离
+                    let innerX = event.clientX - offsetX; // 获取鼠标在方块内的x轴距
+                    let innerY = event.clientY - offsetY; // 获取鼠标在方块内的y轴距
+                    console.log(offsetX,offsetY,innerX,innerY);
                     item.style.backgroundColor = 'rgb(44, 62, 80)';
                     item.style.position = 'absolute';
                     if (idx !== -1) {

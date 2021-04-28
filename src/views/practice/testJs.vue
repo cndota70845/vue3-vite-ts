@@ -31,9 +31,15 @@
         <h2>{{list}}</h2>
         <div class="containerDrag">
             <div id="draggable" class="wrapper">
-                <div v-for="(item,index) in list" :key="index" :idx="item.id" class="dragItem">
-                    <p>{{item.name}}</p>
+                <template v-for="(item,index) in list" :key="index">
+                    <div 
+                        :idx="item.id" 
+                        class="dragItem"
+                        :style="{'top':String((index * 50) - 200) + 'px'}"
+                    >
+                        <p>{{item.name}}</p>
                 </div>
+                </template>
             </div>
             <div id="dragArea" class="area">
                 
@@ -49,7 +55,7 @@ export default {
     name:'testJS',
     setup () {
         const { proxy } = getCurrentInstance();
-        const menu = [
+        let menu = [
             'Vue3',
             'TS',
             'Axios',
@@ -57,6 +63,16 @@ export default {
             'LisUI',
             'LogicFlow'
         ]
+
+        menu.forEach((item, idx) => {
+            if (idx === 4) {
+                menu[idx] = menu[idx].replace('UI','');
+            }
+        });
+
+        menu = menu.map((item, idx) => {
+            return item + '*';
+        });
 
         const active = reactive({
             menu:menu.reduce(function(acc,cur,idx,src) {
@@ -98,48 +114,54 @@ export default {
         function initDrag() {
             const draggable = document.querySelector('#draggable');
             const list = draggable.querySelectorAll('.dragItem');
-            list.forEach(item => {
+            list.forEach((item,index) => {
                 let id = item.getAttribute('idx');
                 let idx = active.list.findIndex((element) => { return element.id == id;});
+                let point = null;
                 //鼠标按下事件
                 item.addEventListener('mousedown',(event) => {
-                    let offsetX = parseInt(item.clientWidth); // 获取当前的x轴距离
-                    let offsetY = parseInt(item.clientHeight); // 获取当前的y轴距离
-                    let innerX = event.clientX + offsetX; // 获取鼠标在方块内的x轴距
-                    let innerY = event.clientY + offsetY; // 获取鼠标在方块内的y轴距
-                    var drag = document.createElement("div");
-                    drag.style.height = '50px';
-                    drag.style.width = '300px';
-                    drag.innerText = active.list[idx].name;
-                    drag.style.backgroundColor = 'rgb(44, 62, 80)';
-                    drag.style.position = 'absolute';
-                    drag.style.color = '#ffffff';
-                    drag.style.lineHeight = '50px';
-                    // drag.style.left = innerX + 'px';
-                    // drag.style.top = innerY + 'px';
-                    draggable.appendChild(drag);
-                    console.log(offsetX,offsetY,innerX,innerY);
+                    point = {
+                        innerX: event.clientX,
+                        innerY :event.clientY
+                    }
+
                     if (idx !== -1) {
-                        active.list[idx].drag = true;
+                        downItem({
+                            index: idx,
+                            target: item
+                        });
                     }
                 });
                 //鼠标移动事件
                 item.addEventListener('mousemove',(event) => {
                     if (idx !== -1 && active.list[idx].drag ) {
-                        let left = event.clientX;
-                        let right = event.clientY;
-                        console.log(left,right);   
+                        let innerX = event.clientX - point.innerX; // 获取鼠标在方块内的x轴距
+                        let innerY = event.clientY - point.innerY; // 获取鼠标在方块内的y轴距
+                        item.style.top = String((idx * 50) - 200 + innerY) + 'px';
+                        item.style.left = String(0 + innerX) + 'px';
+                        item.style.zIndex = '1000';
                     }
                 });
                 //鼠标抬起事件
-                item.addEventListener('mouseup',() => {
+                item.addEventListener('mouseup',(event) => {
+                    console.log(event);
                     item.style.backgroundColor = 'rgb(66, 185, 131)';
+                    item.style.top = String((idx * 50) - 200) + 'px';
+                    item.style.left = '0px';
                     if (idx !== -1) {
                         active.list[idx].drag = false;
                     }
                 });
             });
-        } 
+        }
+
+        function downItem (opt) {
+            let drag = opt.target;
+            let idx = opt.index;
+            active.list[idx].drag = true;
+            drag.style.backgroundColor = 'rgb(66, 185, 131,0.7)';
+            return drag;
+        }
 
         return {
             ...toRefs(active),
